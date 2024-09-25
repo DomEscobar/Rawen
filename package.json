@@ -4,7 +4,7 @@
   "main": "dist-electron/main/index.js",
   "license": "AGPL-3.0-only",
   "author": {
-    "name": "Dom",
+    "name": "Dom"
   },
   "description": "Desktop application that executes AI driven commands",
   "private": true,

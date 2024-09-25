@@ -1,0 +1,61 @@
+{
+  appId: "rawen",
+  artifactName: "${productName}.${version}.${ext}",
+  asar: true,
+  asarUnpack: ["public/**"],
+  directories: {
+    output: "release/${version}",
+  },
+  extraResources: ["public/**/*"],
+  files: ["dist-electron", "dist"],
+  dmg: {
+    contents: [
+      {
+        x: 410,
+        y: 150,
+        type: "link",
+        path: "/Applications",
+      },
+      {
+        x: 130,
+        y: 150,
+        type: "file",
+      },
+    ],
+    sign: false,
+  },
+  mac: {
+    artifactName: "${productName}_${version}.${ext}",
+    target: ["dmg"],
+    icon: "public/mainlogo.png",
+    hardenedRuntime: true,
+    gatekeeperAssess: false,
+    entitlements: "./entitlements.mac.plist",
+    entitlementsInherit: "./entitlements.mac.plist",
+  },
+  win: {
+    target: [
+      {
+        target: "nsis",
+        arch: ["x64"],
+      },
+    ],
+    publisherName: "Dom",
+    artifactName: "${productName}_${version}.${ext}",
+    icon: "public/favicon_big.ico",
+  },
+  nsis: {
+    oneClick: false,
+    perMachine: false,
+    allowToChangeInstallationDirectory: true
+  },
+  publish: {
+    provider: "generic",
+    channel: "latest",
+    url: "https://github.com/domEscobar/Rawen/releases/download/latest/",
+  },
+  protocols: {
+    name: "rawen",
+    schemes: ["rawenapp"],
+  },
+}

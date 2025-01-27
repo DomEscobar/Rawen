@@ -3,10 +3,6 @@
   "version": "0.0.1-alpha",
   "main": "dist-electron/main/index.js",
   "license": "MIT",
-  "author": {
-    "name": "NexTechFusion",
-    "email": "info@nextech-fusion.com"
-  },
   "description": "Desktop application that executes AI driven commands",
   "private": true,
   "debug": {

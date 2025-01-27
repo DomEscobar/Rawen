@@ -1,66 +1,100 @@
-<center>
-<h1 style="color:orange">
- Rawen 
-<img src="public/mainlogo.png" width="64" height="64" />
-</h1>
-<div style="display:flex;justify-content:center; ">
+<div align="center">
+  <img src="public/mainlogo.png" width="120" height="120" />
+  <h1>Rawen</h1>
+  <p><strong>An AI-powered desktop assistant for seamless knowledge management</strong></p>
   <img src="https://i.ibb.co/8xmfNxD/Rawenio.png" width="400" height="400" />
 </div>
 
-### A desktop app that executes AI driven commands
+## Features
 
-</center>
+- 🤖 **AI-Powered Commands**: Create and execute custom commands using various AI models
+- 🔍 **Smart Knowledge Base**: Store and query your documents, images, and data with semantic search
+- ⌨️ **Global Shortcuts**: Set up system-wide keyboard shortcuts for quick access to commands
+- 🎯 **Context-Aware**: Understands your current context to provide relevant assistance
+- 🖼️ **Image Analysis**: Process and analyze images using advanced AI models
+- 🌐 **Web Integration**: Extract and summarize content from websites and YouTube videos
 
-- [x] **Local Knowledge management** - Manage local knowledge (Multimodal)
-- [x] **Direct Document QA** - Ask questions about documents
-- [x] **Summarization** - Summarize context / documents
-- [x] **Visual QA** - QA images
-- [x] **Command management** - Manage commands
-- [x] **Shortcuts** - Create shortcuts for commands
+## Quick Start
 
----
-Table of Contents
+1. Download the latest release for your platform from the [releases page](https://github.com/domEscobar/rawen/releases)
+2. Install and launch Rawen
+3. Configure your preferred AI providers in Settings > Keys
+4. Start using commands or create your own custom workflows
 
-- [Installation](#installation)
-- [Overview](#overview)
-- [Command execution - Basic Flow](#command-execution---basic-flow)
-- [Dev-Mode](#dev-mode)
-- [TY Technologies](#ty-technologies)
-- [Disclaimer:](#disclaimer)
+## Development
 
-## Installation
+### Prerequisites
 
-[Downloaded the latest release](https://github.com/NexTechFusion/rawen/releases)
+- Node.js 16+
+- npm or yarn
 
-## Overview
+### Setup
 
-<img src="https://i.ibb.co/Wx4wgKK/overview.png" width="550" height="270" />
+```bash
+# Clone the repository
+git clone https://github.com/domEscobar/rawen.git
 
-Code and api servers will run on startup locally on the users machine. <br> <small>(TODO : Think about this) </small>
+# Install dependencies forced to avoid potential issues
+npm i --force
 
-## Command execution - Basic Flow
-Based on a simple intention classification, the command is executed
-<img src="https://i.ibb.co/ChWc3G7/flow.png" width="350" height="360" />
+# Start development server
+npm run dev
+```
 
-## Dev-Mode
-At the menu "Key" set a default LLM and a key.
+### Building
 
-1. Clone the repository
-2. Run `npm i --force`
-3. Run `npm run dev`
+```bash
+# Build for production
+npm run build
+```
 
-## TY Technologies
+## Configuration
 
-- [Ollama](https://github.com/ollama)
-- [Transformerjs](https://github.com/xenova/transformers.js)
-- [LanceDB](https://github.com/lancedb/lancedb)
-- [Electron](https://www.electronjs.org/)
-- [React](https://reactjs.org/)
-- [TailwindCSS](https://tailwindcss.com/)
+### AI Providers
 
-## Disclaimer:
+Rawen supports multiple AI providers:
 
-Rawen is a highly experimental project to discover the potential of AI as a desktop copilot.
-It should form a foundation for further research and development on our main objective.
+- OpenAI
+- Google AI
+- Ollama (local)
+- DeepSeek
 
-The code is spaghetti but AI will fix this in the future.
+Configure your API keys and preferences in the Settings > Keys section.
+
+### Knowledge Base
+
+The knowledge base supports various file formats:
+
+- Documents (PDF, DOCX, TXT)
+- Images (PNG, JPG, WEBP)
+- Spreadsheets (XLSX, CSV)
+- Web content
+
+## Creating Custom Commands
+
+1. Go to Settings > Commands
+2. Click "+ Add" to create a new command
+3. Configure the command with:
+   - Name and description
+   - Input processing
+   - AI model selection
+   - Action chain
+   - Output handling
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Technologies
+
+- Electron
+- React
+- TypeScript
+- Tailwind CSS
+- LangChain
+- Transformers.js
+- LanceDB
+
+## License
+
+MIT License - see [LICENSE](LICENSE) for details.

@@ -1,13 +1,12 @@
 import { ipcRenderer } from 'electron'
 import { ElectronIpcEvent } from '../../shared/models/electron-ipc-events'
-import { ExecExternalCodeModel } from '@/modules/task/task.model'
 import { pushUpdateCollapse } from '@/components/ui/app-collapse';
 
 export const ElectronState = {
     isAppCollapsed: false,
 };
 
-export const registerCodePlayerHandler = (callback: (taskEditorData: ExecExternalCodeModel) => void) => {
+export const registerCodePlayerHandler = (callback: (taskEditorData) => void) => {
     ipcRenderer.on(ElectronIpcEvent.CODE_EXEC, (_, taskEditorData) => callback(taskEditorData))
 }
 

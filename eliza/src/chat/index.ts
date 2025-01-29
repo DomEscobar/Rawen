@@ -1,4 +1,3 @@
-import { settings } from "@elizaos/core";
 import readline from "readline";
 
 const rl = readline.createInterface({
@@ -18,10 +17,9 @@ async function handleUserInput(input, agentId) {
   }
 
   try {
-    const serverPort = parseInt(settings.SERVER_PORT || "3000");
 
     const response = await fetch(
-      `http://localhost:${serverPort}/${agentId}/message`,
+      `http://localhost:${3100}/${agentId}/message`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -40,9 +38,9 @@ async function handleUserInput(input, agentId) {
   }
 }
 
-export function startChat(characters) {
+export function startChat(character) {
   function chat() {
-    const agentId = characters[0].name ?? "Agent";
+    const agentId = character.name ?? "Agent";
     rl.question("You: ", async (input) => {
       await handleUserInput(input, agentId);
       if (input.toLowerCase() !== "exit") {

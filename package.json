@@ -11,11 +11,13 @@
     }
   },
   "scripts": {
-    "dev": "npm-run-all --parallel dev-vite dev-local",
+    "dev": "npm-run-all --parallel dev-vite dev-local dev-eliza",
     "dev-vite": "vite",
-    "build": "tsc && vite build && tsc -p tsconfig.server.json --outDir dist-electron && electron-builder",
     "dev-local": "nodemon --exec ts-node server/express-app.ts",
-    "build-server": "tsc -p tsconfig.server.json --outDir dist-electron"
+    "dev-eliza": "cd eliza && pnpm start",
+    "build": "tsc && vite build && tsc -p tsconfig.server.json --outDir dist-electron && npm run build-eliza && electron-builder",
+    "build-server": "tsc -p tsconfig.server.json --outDir dist-electron",
+    "build-eliza": "cd eliza && pnpm i && pnpm build && cp -r dist ../dist-electron/eliza"
   },
   "dependencies": {
     "sharp": "^0.33.5",

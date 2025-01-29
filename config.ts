@@ -1,6 +1,7 @@
 export const SERVER_PORT = 3410;
 export const SERVER_URL = `http://localhost:${SERVER_PORT}/api`;
 export const CODE_SERVER_PORT = 3440;
+export const ELIZA_PORT = 4500;
 
 // xenova models
 export const EMBEDDING_MODEL = 'Xenova/all-MiniLM-L6-v2'; //if you change this delete the lancedb folder

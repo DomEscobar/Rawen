@@ -1,25 +1,42 @@
-import { app, BrowserWindow, globalShortcut, ipcMain, screen, shell, protocol } from 'electron'
-import { join } from 'node:path'
-import { update } from './update'
-import { spawn } from 'node:child_process';
+import {
+  app,
+  BrowserWindow,
+  globalShortcut,
+  ipcMain,
+  screen,
+  shell,
+  protocol,
+} from "electron";
+import { join } from "node:path";
+import { update } from "./update";
+import { spawn } from "node:child_process";
 import path from "path";
-import { addUpdateAppStateHandler, saveAppStateElectron } from '../handlers/state.handler';
-import { addCodeExecuterHandler, removeBlutListener } from './electron-code-executer';
-import { AppStateModel } from '../../shared/models/app-state.model';
-import { ElectronIpcEvent } from '../../shared/models/electron-ipc-events';
-import { addShortcutHandlerKeyListner } from '../handlers/shortcut-handler';
-import { startExternalCodeServer, stopExternalCodeServer } from './external-code-server';
-import { getScreenSize, logElectron } from './utils';
-import { clearAreasE } from '../code-functions/mark-areas.functon';
-import { clearContentPos } from '../code-functions/display-content-pos.function';
-import { Readable } from 'node:stream';
-import { getPublicPath, getResourcesPath } from '../../shared/utils/resources';
-import * as dotenv from 'dotenv';
+import {
+  addUpdateAppStateHandler,
+  saveAppStateElectron,
+} from "../handlers/state.handler";
+import {
+  addCodeExecuterHandler,
+  removeBlutListener,
+} from "./electron-code-executer";
+import { AppStateModel } from "../../shared/models/app-state.model";
+import { ElectronIpcEvent } from "../../shared/models/electron-ipc-events";
+import { addShortcutHandlerKeyListner } from "../handlers/shortcut-handler";
+import {
+  startExternalCodeServer,
+  stopExternalCodeServer,
+} from "./external-code-server";
+import { getScreenSize, logElectron } from "./utils";
+import { clearAreasE } from "../code-functions/mark-areas.functon";
+import { clearContentPos } from "../code-functions/display-content-pos.function";
+import { Readable } from "node:stream";
+import { getPublicPath, getResourcesPath } from "../../shared/utils/resources";
+import * as dotenv from "dotenv";
 dotenv.config();
 
-process.env.DIST_ELECTRON = join(__dirname, '../')
-process.env.DIST = join(process.env.DIST_ELECTRON, '../dist')
-process.env.ELECTRON_USER_PATH = app.getAppPath()
+process.env.DIST_ELECTRON = join(__dirname, "../");
+process.env.DIST = join(process.env.DIST_ELECTRON, "../dist");
+process.env.ELECTRON_USER_PATH = app.getAppPath();
 let expressAppProcess: any;
 
 let currAppWidth = [110, 110];
@@ -28,37 +45,38 @@ export let isAppCollapsed = false;
 const appName = app.getPath("exe");
 
 let expressPath;
-if (process.env.NODE_ENV !== 'development') {
-  expressPath = path.join(`${getResourcesPath()}/app.asar`, 'dist-electron/server/express-app.js');
+if (process.env.NODE_ENV !== "development") {
+  expressPath = path.join(
+    `${getResourcesPath()}/app.asar`,
+    "dist-electron/server/express-app.js"
+  );
 }
 export let canClick = true;
 let externalWindows = [];
 
 // Set application name for Windows 10+ notifications
-if (process.platform === 'win32') app.setAppUserModelId(app.getName())
+if (process.platform === "win32") app.setAppUserModelId(app.getName());
 
 if (!app.requestSingleInstanceLock()) {
-  app.quit()
-  process.exit(0)
+  app.quit();
+  process.exit(0);
 }
 
 export let latestState: AppStateModel | null = null;
-export let mainWindow: BrowserWindow | null = null
-export let editorWindow: BrowserWindow | null = null
-export let curorWindow: BrowserWindow | null = null
-const url = process.env.VITE_DEV_SERVER_URL
+export let mainWindow: BrowserWindow | null = null;
+export let editorWindow: BrowserWindow | null = null;
+export let curorWindow: BrowserWindow | null = null;
+const url = process.env.VITE_DEV_SERVER_URL;
 
-const indexHtml = join(process.env.DIST, 'index.html')
+const indexHtml = join(process.env.DIST, "index.html");
 
 function startExpressServer() {
-
   if (!expressPath) return;
-
 
   expressAppProcess = spawn(appName, [expressPath], {
     env: {
       ELECTRON_RUN_AS_NODE: "1",
-      ELECTRON_USER_DATA_PATH: app.getPath("userData")
+      ELECTRON_USER_DATA_PATH: app.getPath("userData"),
     },
   } as any);
 
@@ -69,17 +87,21 @@ function startExpressServer() {
 }
 
 function safeStringify(obj1: any) {
-  return (obj1 != null ? JSON.stringify(obj1) : "");
+  return obj1 != null ? JSON.stringify(obj1) : "";
 }
 
 function addShortcuthandlers(state?: AppStateModel) {
-  if (!state?.shortcuts || safeStringify(latestState?.shortcuts) == safeStringify(state.shortcuts)) return;
-  
+  if (
+    !state?.shortcuts ||
+    safeStringify(latestState?.shortcuts) == safeStringify(state.shortcuts)
+  )
+    return;
+
   globalShortcut.unregisterAll();
 
-  globalShortcut.register('F1', () => {
-    mainWindow.webContents.openDevTools()
-  })
+  globalShortcut.register("F1", () => {
+    mainWindow.webContents.openDevTools();
+  });
 
   addShortcutHandlerKeyListner(state.shortcuts);
 }
@@ -93,42 +115,46 @@ export async function openExternalShell(filePathOrUrl: string) {
   await shell.openExternal(filePathOrUrl);
 }
 
-export function openExternalWindow(filePathOrContent: string, options?: {
-  browserWindowOptions?: Electron.BrowserWindowConstructorOptions,
-  position?: { x: number, y: number },
-  size?: { width: number, height: number },
-  bringToFront?: boolean
-  focus?: boolean,
-  asFile?: string,
-  inShell?: boolean,
-  code: string
-}) {
-
+export function openExternalWindow(
+  filePathOrContent: string,
+  options?: {
+    browserWindowOptions?: Electron.BrowserWindowConstructorOptions;
+    position?: { x: number; y: number };
+    size?: { width: number; height: number };
+    bringToFront?: boolean;
+    focus?: boolean;
+    asFile?: string;
+    inShell?: boolean;
+    code: string;
+  }
+) {
   if (options?.inShell) {
     openExternalShell(filePathOrContent);
     return;
   }
 
   const externalWindow = new BrowserWindow({
-    title: 'agentlia-external',
-    icon: join(getPublicPath(), 'favicon.ico'),
+    title: "agentlia-external",
+    icon: join(getPublicPath(), "favicon.ico"),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       webSecurity: false,
-      experimentalFeatures: true
+      experimentalFeatures: true,
     },
-    ...options?.browserWindowOptions
-  })
+    ...options?.browserWindowOptions,
+  });
 
   if (options?.asFile) {
     if (filePathOrContent.startsWith("http")) {
-      externalWindow.loadURL(filePathOrContent)
+      externalWindow.loadURL(filePathOrContent);
     } else {
-      externalWindow.loadFile(filePathOrContent)
+      externalWindow.loadFile(filePathOrContent);
     }
   } else {
-    externalWindow.loadFile(join(getPublicPath(), 'templates/tailwind-basic.html'))
+    externalWindow.loadFile(
+      join(getPublicPath(), "templates/tailwind-basic.html")
+    );
   }
 
   if (options?.position) {
@@ -147,14 +173,13 @@ export function openExternalWindow(filePathOrContent: string, options?: {
     externalWindow.focus();
   }
 
-  externalWindow.on('close', () => {
-    externalWindows = externalWindows.filter(w => w !== externalWindow);
+  externalWindow.on("close", () => {
+    externalWindows = externalWindows.filter((w) => w !== externalWindow);
   });
 
   externalWindows.push(externalWindow);
 
-  externalWindow.webContents.on('did-finish-load', () => {
-
+  externalWindow.webContents.on("did-finish-load", () => {
     if (!options?.asFile) {
       const stateJSON = JSON.stringify(filePathOrContent);
       externalWindow.webContents.executeJavaScript(`
@@ -173,37 +198,40 @@ export function openFollowingWindow(content) {
     curorWindow.close();
   }
   curorWindow = new BrowserWindow({
-    title: 'agentlia-cursor',
+    title: "agentlia-cursor",
     autoHideMenuBar: true,
     frame: false,
     focusable: false,
     transparent: true,
     alwaysOnTop: true,
-    icon: join(getPublicPath(), 'favicon.ico'),
+    icon: join(getPublicPath(), "favicon.ico"),
     webPreferences: {
       nodeIntegration: true,
       nodeIntegrationInSubFrames: true,
       nodeIntegrationInWorker: true,
-      contextIsolation: false
+      contextIsolation: false,
     },
-  })
+  });
   curorWindow.setAlwaysOnTop(true, "pop-up-menu");
 
-  curorWindow.loadFile(join(getPublicPath(), 'templates/tailwind-basic.html'))
+  curorWindow.loadFile(join(getPublicPath(), "templates/tailwind-basic.html"));
 
   curorWindow.setIgnoreMouseEvents(true);
   const intervall = setInterval(() => {
     if (curorWindow == null) {
       clearInterval(intervall);
       return;
-    };
+    }
 
     let { x, y } = screen.getCursorScreenPoint();
     let currentDisplay = screen.getDisplayNearestPoint({ x, y });
-    curorWindow.setPosition(x - currentDisplay.bounds.x + 20, y - currentDisplay.bounds.y + 20);
+    curorWindow.setPosition(
+      x - currentDisplay.bounds.x + 20,
+      y - currentDisplay.bounds.y + 20
+    );
   }, 10);
 
-  curorWindow.webContents.on('did-finish-load', () => {
+  curorWindow.webContents.on("did-finish-load", () => {
     let stateJSON = JSON.stringify(content);
     curorWindow.webContents.executeJavaScript(`
     document.body.innerHTML = ${stateJSON}
@@ -214,50 +242,57 @@ export function openFollowingWindow(content) {
     `);
   });
 
-  curorWindow.on('close', () => {
+  curorWindow.on("close", () => {
     clearInterval(intervall);
     curorWindow = null;
   });
 }
 
-
 export function registerProtocol() {
-  const customProtocol = 'agentliaapp';
+  const customProtocol = "agentliaapp";
   app.setAsDefaultProtocolClient(customProtocol);
   protocol.registerSchemesAsPrivileged([
-    { scheme: customProtocol, privileges: { secure: true, standard: true, bypassCSP: true, supportFetchAPI: true } }
-  ])
+    {
+      scheme: customProtocol,
+      privileges: {
+        secure: true,
+        standard: true,
+        bypassCSP: true,
+        supportFetchAPI: true,
+      },
+    },
+  ]);
 }
 
 async function createWindow() {
   mainWindow = new BrowserWindow({
-    title: 'agentlia',
+    title: "agentlia",
     autoHideMenuBar: true,
     width: 420,
     height: 550,
     frame: false,
     alwaysOnTop: true,
-    icon: join(getPublicPath(), 'favicon.ico'),
+    icon: join(getPublicPath(), "favicon.ico"),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       experimentalFeatures: true,
       allowRunningInsecureContent: true,
-      autoplayPolicy: 'no-user-gesture-required',
-      webSecurity: false
+      autoplayPolicy: "no-user-gesture-required",
+      webSecurity: false,
     },
-  })
+  });
   mainWindow.setAlwaysOnTop(true, "pop-up-menu");
 
   if (url) {
-    await mainWindow.loadURL(url)
+    await mainWindow.loadURL(url);
   } else {
-    await mainWindow.loadFile(indexHtml)
+    await mainWindow.loadFile(indexHtml);
   }
 
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
-    return { action: 'deny' };
+    return { action: "deny" };
   });
 
   addUpdateAppStateHandler(mainWindow, (state) => {
@@ -276,23 +311,26 @@ async function createWindow() {
   });
 
   ipcMain.on(ElectronIpcEvent.SET_CAN_CLICK, (_, args) => {
-    canClick = args
+    canClick = args;
   });
 
   currAppWidth = mainWindow.getSize();
-  ipcMain.on(ElectronIpcEvent.COLLAPSE_APP, (_, { isCollapsed, width, height, position, placement }) => {
-    isAppCollapsed = isCollapsed;
-    collapseApp({ isCollapsed, width, height, position, placement });
-  });
+  ipcMain.on(
+    ElectronIpcEvent.COLLAPSE_APP,
+    (_, { isCollapsed, width, height, position, placement }) => {
+      isAppCollapsed = isCollapsed;
+      collapseApp({ isCollapsed, width, height, position, placement });
+    }
+  );
 
   // Apply electron-updater
-  update(mainWindow)
+  update(mainWindow);
 }
 
 registerProtocol();
-app.whenReady().then(createWindow)
+app.whenReady().then(createWindow);
 
-app.on('before-quit', async () => {
+app.on("before-quit", async () => {
   if (latestState) {
     saveAppStateElectron(latestState);
   }
@@ -303,35 +341,46 @@ app.on('before-quit', async () => {
 
   stopExternalCodeServer();
 
-  mainWindow = null
-  editorWindow = null
-  curorWindow = null
+  mainWindow = null;
+  editorWindow = null;
+  curorWindow = null;
 
   clearAreasE();
   clearContentPos();
 
-  externalWindows.forEach(w => w.close());
+  externalWindows.forEach((w) => w.close());
 });
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit()
-})
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") app.quit();
+});
 
-export function collapseApp(options: { isCollapsed: boolean, width?: number, height?: number, position?: { x: number, y: number }, placement?: "RIGHT" }) {
+export function collapseApp(options: {
+  isCollapsed: boolean;
+  width?: number;
+  height?: number;
+  position?: { x: number; y: number };
+  placement?: "RIGHT";
+}) {
   const isCollapsed = options.isCollapsed;
   const collapsedWidth = options.width ?? 66;
   const collapsedHeight = options.height ?? 66;
   removeBlutListener();
   mainWindow.setAlwaysOnTop(true, "pop-up-menu");
 
-
   if (isCollapsed) {
     currAppWidth = mainWindow.getSize();
   }
 
-  mainWindow.setSize(isCollapsed ? collapsedWidth : currAppWidth[0], isCollapsed ? collapsedHeight : currAppWidth[1]);
+  mainWindow.setSize(
+    isCollapsed ? collapsedWidth : currAppWidth[0],
+    isCollapsed ? collapsedHeight : currAppWidth[1]
+  );
   // position to right to the mouse pos
-  const mousePos = { x: mainWindow.getPosition()[0], y: mainWindow.getPosition()[1] };
+  const mousePos = {
+    x: mainWindow.getPosition()[0],
+    y: mainWindow.getPosition()[1],
+  };
 
   if (!isCollapsed) {
     posBeforeCollapse = { x: mousePos.x, y: mousePos.y };
@@ -353,7 +402,10 @@ export function collapseApp(options: { isCollapsed: boolean, width?: number, hei
 
     if (options.placement == "RIGHT") {
       const { width, height } = getScreenSize();
-      mainWindow.setPosition(width - collapsedWidth - 36, height - collapsedHeight - 90);
+      mainWindow.setPosition(
+        width - collapsedWidth - 36,
+        height - collapsedHeight - 90
+      );
       return;
     }
 
@@ -362,7 +414,10 @@ export function collapseApp(options: { isCollapsed: boolean, width?: number, hei
       return;
     }
 
-    mainWindow.setPosition(pos.x - collapsedWidth + collapsedWidth, pos.y - collapsedHeight + collapsedHeight);
+    mainWindow.setPosition(
+      pos.x - collapsedWidth + collapsedWidth,
+      pos.y - collapsedHeight + collapsedHeight
+    );
   }
 
   mainWindow.setResizable(!isCollapsed);

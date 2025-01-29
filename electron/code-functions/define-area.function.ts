@@ -1,6 +1,7 @@
 import { BrowserWindow, desktopCapturer, ipcMain, screen } from "electron";
 import { join } from "path";
 import { getScreenSize } from "../main/utils";
+import { getPublicPath } from '../../shared/utils/resources';
 
 async function getActiveScreen() {
     const { width, height, scaleFactor, id } = getScreenSize();
@@ -27,7 +28,7 @@ export async function defineArear() {
         overlayWindow.setAlwaysOnTop(true, "pop-up-menu");
 
 
-        overlayWindow.loadFile(join(process.env.PUBLIC, 'templates/overlay.html'));
+        overlayWindow.loadFile(join(getPublicPath(), 'templates/overlay.html'));
 
         ipcMain.on('area-selected', async (event, rect) => {
             try {

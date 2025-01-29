@@ -83,4 +83,5 @@ export interface AppStateModel {
 
 export interface GeneralSettingsModel {
   isAdvancedMode?: boolean;
+  monitorSteps?: boolean;
 }

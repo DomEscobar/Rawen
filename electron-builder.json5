@@ -1,5 +1,5 @@
 {
-  appId: "rawen",
+  appId: "agentlia",
   artifactName: "${productName}.${version}.${ext}",
   asar: true,
   asarUnpack: ["public/**"],
@@ -52,10 +52,10 @@
   publish: {
     provider: "generic",
     channel: "latest",
-    url: "https://github.com/domEscobar/rawen/releases/download/latest/",
+    url: "https://github.com/domEscobar/agentlia/releases/download/latest/",
   },
   protocols: {
-    name: "rawen",
-    schemes: ["rawenapp"],
+    name: "agentlia",
+    schemes: ["agentliaapp"],
   },
 }

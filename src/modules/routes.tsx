@@ -26,7 +26,7 @@ export const Routing = () => {
             <div className="Loader">
               <img
                 src="mainlogo.png"
-                alt="rawen"
+                alt="agentlia"
                 width="156px"
                 height="156px"
               />

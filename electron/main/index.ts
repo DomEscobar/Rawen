@@ -110,7 +110,7 @@ export function openExternalWindow(filePathOrContent: string, options?: {
   }
 
   const externalWindow = new BrowserWindow({
-    title: 'rawen-external',
+    title: 'agentlia-external',
     icon: join(getPublicPath(), 'favicon.ico'),
     webPreferences: {
       nodeIntegration: true,
@@ -173,7 +173,7 @@ export function openFollowingWindow(content) {
     curorWindow.close();
   }
   curorWindow = new BrowserWindow({
-    title: 'rawen-cursor',
+    title: 'agentlia-cursor',
     autoHideMenuBar: true,
     frame: false,
     focusable: false,
@@ -222,7 +222,7 @@ export function openFollowingWindow(content) {
 
 
 export function registerProtocol() {
-  const customProtocol = 'rawenapp';
+  const customProtocol = 'agentliaapp';
   app.setAsDefaultProtocolClient(customProtocol);
   protocol.registerSchemesAsPrivileged([
     { scheme: customProtocol, privileges: { secure: true, standard: true, bypassCSP: true, supportFetchAPI: true } }
@@ -231,7 +231,7 @@ export function registerProtocol() {
 
 async function createWindow() {
   mainWindow = new BrowserWindow({
-    title: 'rawen',
+    title: 'agentlia',
     autoHideMenuBar: true,
     width: 420,
     height: 550,

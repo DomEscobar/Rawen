@@ -324,7 +324,7 @@ function Knowledege() {
           </div>
 
           <img
-            src="thinking.png"
+            src="lia.gif"
             className="absolute bottom-0 right-0 opacity-5 w-48 -z-10"
           />
         </DraggableComponent>

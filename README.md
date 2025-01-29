@@ -1,8 +1,8 @@
 <div align="center">
   <img src="public/mainlogo.png" width="120" height="120" />
-  <h1>Rawen</h1>
+  <h1>agentlia</h1>
   <p><strong>An AI-powered desktop assistant for seamless knowledge management</strong></p>
-  <img src="https://i.ibb.co/8xmfNxD/Rawenio.png" width="400" height="400" />
+  <img src="https://i.ibb.co/8xmfNxD/agentliaio.png" width="400" height="400" />
 </div>
 
 ## Features
@@ -16,8 +16,8 @@
 
 ## Quick Start
 
-1. Download the latest release for your platform from the [releases page](https://github.com/domEscobar/rawen/releases)
-2. Install and launch Rawen
+1. Download the latest release for your platform from the [releases page](https://github.com/domEscobar/agentlia/releases)
+2. Install and launch agentlia
 3. Configure your preferred AI providers in Settings > Keys
 4. Start using commands or create your own custom workflows
 
@@ -32,7 +32,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/domEscobar/rawen.git
+git clone https://github.com/domEscobar/agentlia.git
 
 # Install dependencies forced to avoid potential issues
 npm i --force
@@ -52,7 +52,7 @@ npm run build
 
 ### AI Providers
 
-Rawen supports multiple AI providers:
+agentlia supports multiple AI providers:
 
 - OpenAI
 - Google AI

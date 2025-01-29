@@ -1,6 +1,7 @@
 import { BrowserWindow } from "electron";
 import { join } from "path";
 import { getScreenSize } from "../main/utils";
+import { getPublicPath } from '../../shared/utils/resources';
 
 export let overlayWindow;
 
@@ -41,7 +42,7 @@ export async function markAreasE(areas: Area[]) {
     overlayWindow.setIgnoreMouseEvents(true)
     overlayWindow.setAlwaysOnTop(true, "pop-up-menu");
 
-    overlayWindow.loadFile(join(process.env.PUBLIC, 'templates/mark-areas.html'));
+    overlayWindow.loadFile(join(getPublicPath(), 'templates/mark-areas.html'));
 
     overlayWindow.webContents.once('did-finish-load', () => {
         overlayWindow.webContents.send('mark-areas', areas);

@@ -7,17 +7,13 @@ import {
   type Character,
 } from "@elizaos/core";
 import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 import { initializeDbCache } from "./cache/index.ts";
-import { character } from "./character.ts";
 import { startChat } from "./chat/index.ts";
 import { getTokenForProvider } from "./config/index.ts";
 import { initializeDatabase } from "./database/index.ts";
+import path from "path";
 
 export const ELIZA_SERVER_PORT = 3100;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 export const wait = (minTime: number = 1000, maxTime: number = 3000) => {
   const waitTime =
@@ -25,21 +21,18 @@ export const wait = (minTime: number = 1000, maxTime: number = 3000) => {
   return new Promise((resolve) => setTimeout(resolve, waitTime));
 };
 
-export function createAgent(
-  character: Character,
-  db: any,
-  cache: any,
-  token: string
-) {
+export function createAgent(character: any, db: any, cache: any) {
   elizaLogger.success(
     elizaLogger.successesTitle,
     "Creating runtime for character",
     character.name
   );
 
+  console.log("Creating runtime for character==============", character.name, character.token);
+
   return new AgentRuntime({
     databaseAdapter: db,
-    token: "MOCK",
+    token: character.token,
     modelProvider: ModelProviderName.OPENAI,
     evaluators: [],
     character,
@@ -57,8 +50,7 @@ async function startAgent(character: Character, directClient: DirectClient) {
     character.id ??= stringToUuid(character.name);
     character.username ??= character.name;
 
-    const token = getTokenForProvider(character.modelProvider, character);
-    const dataDir = path.join(__dirname, "../data");
+    const dataDir = process.env.ELECTRON_USER_DATA_PATH || "../public";
 
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
@@ -69,7 +61,7 @@ async function startAgent(character: Character, directClient: DirectClient) {
     await db.init();
 
     const cache = initializeDbCache(character, db);
-    const runtime = createAgent(character, db, cache, token);
+    const runtime = createAgent(character, db, cache);
 
     await runtime.initialize();
 
@@ -90,7 +82,13 @@ async function startAgent(character: Character, directClient: DirectClient) {
 }
 
 const startAgents = async () => {
+  const dataDir = process.env.ELECTRON_USER_DATA_PATH || "../public";
+
   const directClient = new DirectClient();
+  const character = JSON.parse(
+    fs.readFileSync(path.join(dataDir, "character.json"), "utf8")
+  );
+
   directClient.registerAgent(await startAgent(character, directClient));
   directClient.start(ELIZA_SERVER_PORT);
 

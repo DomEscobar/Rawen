@@ -17,7 +17,8 @@
     "dev-eliza": "cd eliza && pnpm start",
     "build": "tsc && vite build && tsc -p tsconfig.server.json --outDir dist-electron && npm run build-eliza && electron-builder",
     "build-server": "tsc -p tsconfig.server.json --outDir dist-electron",
-    "build-eliza": "cd eliza && pnpm i && pnpm build && cp -r dist ../dist-electron/eliza"
+    "build-eliza": "cd eliza && pnpm i && pnpm build && cp -r dist ../dist-electron/eliza",
+    "postinstall": "cd eliza && pnpm install"
   },
   "dependencies": {
     "sharp": "^0.33.5",

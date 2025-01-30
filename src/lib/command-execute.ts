@@ -27,7 +27,6 @@ import { setCanClick } from "@/electron/electron-ipc-handlers";
 import { CodeFunctions } from "@/code/client-code-functions";
 import { getPublicPath } from "../../shared/utils/resources";
 import path from "node:path";
-import { callElizaChat } from "./llm/basic-eliza-chat";
 export enum DefaultCommandIds {
   LOCAL_CHAT = "localChat",
 }
@@ -200,14 +199,14 @@ export async function execAction(
     }
 
     //haxor
-    if (dynamicAction.id === "aieliza") {
-      return await callElizaChat(
-        params.url,
-        input,
-        () => {},
-        new AbortController()
-      );
-    }
+    // if (dynamicAction.id === "aieliza") {
+    //   return await callElizaChat(
+    //     params.url,
+    //     input,
+    //     () => {},
+    //     new AbortController()
+    //   );
+    // }
 
     return await executeCode(code, params);
   }

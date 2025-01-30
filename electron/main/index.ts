@@ -134,13 +134,8 @@ export function openExternalWindow(
   }
 
   const externalWindow = new BrowserWindow({
-<<<<<<< HEAD
     title: "agentlia-external",
     icon: join(getPublicPath(), "favicon.ico"),
-=======
-    title: 'agentlia-external',
-    icon: join(getPublicPath(), 'favicon.ico'),
->>>>>>> 9884579 (sace)
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -203,11 +198,7 @@ export function openFollowingWindow(content) {
     curorWindow.close();
   }
   curorWindow = new BrowserWindow({
-<<<<<<< HEAD
     title: "agentlia-cursor",
-=======
-    title: 'agentlia-cursor',
->>>>>>> 9884579 (sace)
     autoHideMenuBar: true,
     frame: false,
     focusable: false,
@@ -258,11 +249,7 @@ export function openFollowingWindow(content) {
 }
 
 export function registerProtocol() {
-<<<<<<< HEAD
   const customProtocol = "agentliaapp";
-=======
-  const customProtocol = 'agentliaapp';
->>>>>>> 9884579 (sace)
   app.setAsDefaultProtocolClient(customProtocol);
   protocol.registerSchemesAsPrivileged([
     {
@@ -279,11 +266,7 @@ export function registerProtocol() {
 
 async function createWindow() {
   mainWindow = new BrowserWindow({
-<<<<<<< HEAD
     title: "agentlia",
-=======
-    title: 'agentlia',
->>>>>>> 9884579 (sace)
     autoHideMenuBar: true,
     width: 420,
     height: 550,

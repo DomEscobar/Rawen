@@ -1,5 +1,3 @@
-import { ELIZA_PORT, SERVER_PORT } from "../../../config";
-
 /**
  * Calls the Eliza chat server with the given prompt and handles streaming responses
  *
@@ -9,18 +7,15 @@ import { ELIZA_PORT, SERVER_PORT } from "../../../config";
  * @param history Previous conversation history (optional)
  */
 export async function callElizaChat(
+  url: string,
   prompt: string,
   callback: Function,
   abortController: AbortController,
   history: any[] = []
 ) {
   try {
-    // Get the first agent name from history or use default "Agent"
-    const agentId = history?.[0]?.name ?? "Agent";
-
-    // Make request to Eliza server
     const response = await fetch(
-      `http://localhost:${ELIZA_PORT}/${agentId}/message`,
+     url,
       {
         method: "POST",
         headers: {

@@ -3,22 +3,17 @@
   "version": "0.0.1-alpha",
   "main": "dist-electron/main/index.js",
   "license": "MIT",
-  "description": "Desktop application that executes AI driven commands",
-  "private": true,
   "debug": {
     "env": {
       "VITE_DEV_SERVER_URL": "http://127.0.0.1:7777/"
     }
   },
   "scripts": {
-    "dev": "npm-run-all --parallel dev-vite dev-local dev-eliza",
+    "dev": "npm-run-all --parallel dev-vite dev-local",
     "dev-vite": "vite",
     "dev-local": "nodemon --exec ts-node server/express-app.ts",
-    "dev-eliza": "cd eliza && pnpm start",
-    "build": "tsc && vite build && tsc -p tsconfig.server.json --outDir dist-electron && npm run build-eliza && electron-builder",
-    "build-server": "tsc -p tsconfig.server.json --outDir dist-electron",
-    "build-eliza": "cd eliza && pnpm i && pnpm build && cp -r dist ../dist-electron/eliza",
-    "postinstall": "cd eliza && pnpm install"
+    "build": "tsc && vite build && tsc -p tsconfig.server.json --outDir dist-electron && electron-builder",
+    "build-server": "tsc -p tsconfig.server.json --outDir dist-electron"
   },
   "dependencies": {
     "sharp": "^0.33.5",

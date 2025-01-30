@@ -38,7 +38,6 @@ process.env.DIST_ELECTRON = join(__dirname, "../");
 process.env.DIST = join(process.env.DIST_ELECTRON, "../dist");
 process.env.ELECTRON_USER_PATH = app.getAppPath();
 let expressAppProcess: any;
-let elizaAppProcess: any;
 
 let currAppWidth = [110, 110];
 let posBeforeCollapse;
@@ -46,15 +45,10 @@ export let isAppCollapsed = false;
 const appName = app.getPath("exe");
 
 let expressPath;
-let elizaPath;
 if (process.env.NODE_ENV !== "development") {
   expressPath = path.join(
     `${getResourcesPath()}/app.asar`,
     "dist-electron/server/express-app.js"
-  );
-  elizaPath = path.join(
-    `${getResourcesPath()}/app.asar`,
-    "dist-electron/eliza/src/index.js"
   );
 }
 export let canClick = true;
@@ -90,22 +84,6 @@ function startExpressServer() {
 
   log(expressAppProcess.stdout);
   log(expressAppProcess.stderr);
-}
-
-function startElizaServer() {
-  if (!elizaPath) return;
-
-  elizaAppProcess = spawn(appName, [elizaPath], {
-    env: {
-      ELECTRON_RUN_AS_NODE: "1",
-      ELECTRON_PUBLIC_PATH: getPublicPath(),
-    },
-  } as any);
-
-  logElectron(`Starting Eliza server with path: ${elizaPath}`);
-
-  log(elizaAppProcess.stdout);
-  log(elizaAppProcess.stderr);
 }
 
 function safeStringify(obj1: any) {
@@ -323,7 +301,6 @@ async function createWindow() {
   });
 
   startExpressServer();
-  startElizaServer();
   startExternalCodeServer();
   addCodeExecuterHandler();
 
@@ -358,10 +335,6 @@ app.on("before-quit", async () => {
 
   if (expressAppProcess) {
     expressAppProcess.kill("SIGINT");
-  }
-
-  if (elizaAppProcess) {
-    elizaAppProcess.kill("SIGINT");
   }
 
   stopExternalCodeServer();

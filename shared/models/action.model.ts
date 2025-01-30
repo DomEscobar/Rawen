@@ -68,5 +68,17 @@ export const DynamicActionTypes: DynamicActionType[] = [
         name: "End stream",
         code: "endStream();",
         editableFields: []
-    }
+    },
+    {
+        id: "aieliza",
+        name: "ElizaOs Chat",
+        code: "",
+        editableFields: [
+            {
+                id: "url",
+                name: "URL",
+                type: "Text"
+            }
+        ]
+    },
 ];

@@ -10,7 +10,6 @@ import { getLLMModel } from "../../../shared/utils/llm-model";
 import { RemoteEmbeddings } from "./remove-embeddings";
 import { checkTextsMatchLLM } from "./llm-matcher";
 import { EMBEDDING_MODEL } from "../../../config";
-import { callElizaChat } from "./basic-eliza-chat";
 
 export async function callRag(
   query: string,
@@ -99,17 +98,13 @@ async function langchainRag(
   history: any[] = []
 ) {
   if (docs?.length === 0) {
-    // const result = await callChatChain(
-    //   query,
-    //   model,
-    //   callback,
-    //   abortController,
-    //   history
-    // );
-    // return { output_text: result, sourceDocuments: [] };
-
-    const result = await callElizaChat(query, callback, abortController,history);
-
+    const result = await callChatChain(
+      query,
+      model,
+      callback,
+      abortController,
+      history
+    );
     return { output_text: result, sourceDocuments: [] };
   }
 

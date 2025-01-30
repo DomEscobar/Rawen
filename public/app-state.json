@@ -78,6 +78,17 @@
   },
   "commands": [
     {
+      "id": "zyqtd2q6e",
+      "name": "Eliza chat",
+      "description": "",
+      "actions": [
+        {
+          "id": "6vj6ix8z8",
+          "type": "LmmRequest"
+        }
+      ]
+    },
+    {
       "id": "idw44w80l",
       "name": "toggle collapse app (Shortcut)",
       "description": "opens / closes the app",
